@@ -1,0 +1,261 @@
+\documentclass{article} % For LaTeX2e
+\pdfoutput=1
+\usepackage{iclr2021_conference,times}
+
+\usepackage{microtype}
+\usepackage{inconsolata}
+
+
+\usepackage{hyperref}
+\usepackage{url}
+\usepackage[capitalize]{cleveref}
+
+% Authors must not appear in the submitted version. They should be hidden
+% as long as the \iclrfinalcopy macro remains commented out below.
+% Non-anonymous submissions will be rejected without review.
+
+%\author{
+%Natalia Cerebro \& Amelie P. Amygdale \thanks{ Use footnote for providing further information
+%about author (webpage, alternative address)---\emph{not} for acknowledging
+%funding agencies.  Funding acknowledgements go at the end of the paper.} \\
+%Department of Computer Science\\
+%Cranberry-Lemon University\\
+%Pittsburgh, PA 15213, USA \\
+%\texttt{\{hippo,brain,jen\}@cs.cranberry-lemon.edu} \\
+%\And
+%Ji Q. Ren \& Yevgeny LeNet \\
+%Department of Computational Neuroscience \\
+%University of the Witwatersrand \\
+%Joburg, South Africa \\
+%\texttt{\{robot,net\}@wits.ac.za} \\
+%\AND
+%Coauthor \\
+%Affiliation \\
+%Address \\
+%\texttt{email}
+%}
+
+% The \author macro works with any number of authors. There are two commands
+% used to separate the names and addresses of multiple authors: \And and \AND.
+%
+% Using \And between authors leaves it to \LaTeX{} to determine where to break
+% the lines. Using \AND forces a linebreak at that point. So, if \LaTeX{}
+% puts 3 of 4 authors names on the first line, and the last on the second
+% line, try using \AND instead of \And before the third author name.
+
+%\iclrfinalcopy % Uncomment for camera-ready version, but NOT for submission.
+
+\title{May I Have Your Attention, Please? \\
+A Proposed Role for Attention in the \\ Scientific Literature}
+
+
+\begin{document}
+
+\maketitle
+
+%%%%%%%%%%%%%%%%%% %%%%%%%%%%%%%%%%%% %%%%%%%%%%%%%%%%%%
+\begin{abstract}
+The scientific literature can be thought of as a system to 
+(1) record knowledge and enable others to find and extend that knowledge, and 
+(2) support the profession of science, by allowing the community to evaluate an individual's impact on the scientific literature itself.
+%
+We argue that the current realization of the scientific literature --- in articles, traditional peer review, citation networks, preprints, and increasingly blog and social media posts --- lacks an
+effective mechanism for communities to direct attention towards certain parts of the literature and away from others. 
+%
+A sufficiently fine-grained mechanism for directing attention could in turn incentivize small contributions such as 
+bug fixes 
+(directing attention away from a typo to the patched version), 
+new exposition 
+(directing attention towards explanations), and 
+better curation (via living reviews that draw connections by themselves directing attention to other resources).
+%
+We believe that a system that appropriately directs attention could speed up scientific progress by making it easier for researchers to discover the state of a given subfield.
+%
+By encouraging a much wider range of scientific activities and the record of such in the literature,  the literature itself would become a better source of data for evaluating impact.
+
+We propose a new approach that reimagines that scientific literature as a network of immutable resources 
+on top of which communities of researchers help guide attention for their members, 
+without requiring consensus between such communities. When conflicts do arise, 
+one must still ultimately decide who to trust, but this process can itself play out with public debate and via the direction of attention.
+We illustrate the technological and social implications of this proposal in a number of use-cases, including peer review, maintaining the literature, handling disagreement, and measuring impact. 
+We also consider and address potential concerns regarding its social impact on inequities in credit and hiring, the nature of authorship, and accessibility.
+\end{abstract}
+%%%%%%%%%%%%%%%%%% %%%%%%%%%%%%%%%%%% %%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%% %%%%%%%%%%%%%%%%%% %%%%%%%%%%%%%%%%%%
+\section{Introduction}
+The scientific literature currently evolves,
+not through modification of existing research articles, 
+but rather, through the creation of new ones, which reference existing articles.
+The present state of knowledge is, therefore, merely implicit in the literature,
+which raises significant barriers to entry for those wading into areas beyond their immediate expertise.
+At the moment, scientific communities attempt to chart the state-of-the-art
+through
+a combination of web search, conferences, and an oral tradition which is increasingly shifting onto social media. 
+%
+Scientists bring order to more stable parts of the literature and direct the attention of their colleagues through 
+blog posts, lecture notes, survey articles, expository writing, and eventually textbooks.
+These resources can be very useful to a researcher,
+but their potential impact may not be realized
+if the researcher's attention is not drawn to them at the right moment.
+
+There is also a great deal of scientific knowledge that does not even end up in the scientific literature.
+Consider the vast effort the community expends on 
+filling in missing details in important papers, 
+discovering hidden uconnections between resources, 
+and surveying corners of the literature.
+What becomes of this work?
+%
+On the other hand, there is a great deal of wasted effort that could have been avoided if attention could have been directed appropriately --- such as when
+researchers learn outdated ideas in highly cited papers,
+try to reproduce experiments known to be irreproducible, 
+encounter the same typos that have been discovered many times before,
+or review a resubmission of a marginal conference submission.
+
+
+Each of these activities potentially produces a valuable resource, but 
+such resources are rarely recorded in the literature: there is often no venue for these types of contributions,
+no way to measure the impact of such contributions without any record of them,
+and, so, no meaningful credit assigned to creating them.
+Because these are crucial activities, they are often repeated across the globe by countless research teams.
+As a result, a huge amount of work that the community carries out is either wasted or wasteful.
+
+
+Our failure to discover relevant resources when they are needed leads to 
+further symptoms of our attention problem.
+This problem is evident when researchers reinvent the wheel, when they don't properly cite each other, and in rich-get-richer effects in citations. It is also evident in ``rot'' in the literature, such as work that is irreproducible or wrongheaded but highly cited.
+
+
+In summary: the scientific literature has an attention problem. Researchers don't know where to look even when the relevant resources exist, and this in turn leads to recreating certain valuable resources while wasting time that could have better spent elsewhere.
+
+\subsection{Our proposed solution}
+
+The starting point of our proposal is the observation that any digital object, i.e., ``resource'',
+such as \LaTeX{} source file, data set, etc., can be given an (effectively) unique name (e.g., via a cryptographic hash) 
+that allows one to refer that object in a consistent way. 
+Clearly, anyone can make resources and resources can refer to other resources via names. 
+This process is a type of citation, 
+but makes finer-grained distinctions around ``versions''. 
+For example, once a single character in an article is changed, it is a new resource. 
+
+Usual scientific outputs, especially articles, form one important type of resource.
+In our proposal, another new type of resource plays a key role. 
+In particular, anyone can create a resource that asserts that a relation holds between a set of resources. 
+For example, a researcher could assert that one resource is an updated-version-of another resource (much like uploading an article on arXiv might create a v2). 
+The researcher might also use cryptographic signatures to prove that they were the author of the original article.
+As another example, a researcher could fix a typo in an article by creating a resource that specifies a diff and points to the original article.
+We can think about resources as forming the vertices of a (hyper)graph, where there is a (hyper)edge between a set of resources if they are referenced by the same resource.
+
+As resources in this graph proliferate, a key challenge is to
+develop a mechanism that directs attention on this graph.
+We propose to rely on a social layer 
+that captures scientific trust. 
+The purpose of this ``trust network''
+is to allow groups of individuals to steer \emph{each other's attention} towards certain resources and/or away from other resources.
+Indeed, since resources are immutable, the evolution of the scientific literature in our proposal
+is entirely implemented by shifting attention from outdated resources to updated resources --- nothing is ever deleted, just ignored. When a resource is ``updated'', the update does not replace the original resource, though many participants may choose to shift their attention to the update.
+
+One way for an individual to indicate trust in a resource is to assert trust in a new resource. (The analogy of a ``like'' is appropriate, though the 
+weight of trusting something should be heavier.) In a similar way, an individual can indicate that they do not trust a resource.
+Within a self-organized group of individuals,
+one way to determine which resources to attend to
+is to look at which resources other group members have marked as trustworthy. 
+Groups might also develop mechanisms that
+allow for trust-resources 
+(authored by highly trusted group members) 
+that recommending shifting to some resource in place of another (e.g., in moving to a newer version of a given resource) to quickly propagate through the network --- of course with the ability to revert such changes in attention as controversies arise. Many other proposals are possible, and we explore a number of analogous ideas that might usefully be borrowed.
+
+Currently, peer review is often conflated with stamps of approval,
+in some research areas the best people to review are seldom asked to do so,
+and credit is rarely assigned for performing peer review.
+Machine learning in particular is experiencing growing pains 
+(since the current peer review doesn't scale naturally as the community grows), 
+and in any quickly-moving field the fact that papers are seldom revised 
+following the first successful round of review creates further problems.
+We consider the implications of our proposed system for handling these concerns,
+as well as handling disagreement, measuring impact and distributing assessment of value, 
+and on maintaining the literature.
+As hinted above, we also foresee potential longer-term benefits to a system
+that better captures ancillary or small contributions of diverse types,
+and it may also facilitate future massively distributed collaborations.
+
+
+We expect effective mechanisms for attention to have positive impacts on accessibility (described below), inclusivity, and
+pedagogy.
+Towards both inclusivity and pedagogy, our proposal incentivizes a much broader range of contributions 
+to the scientific literature, including expository work and work building visualizations of difficult concepts.
+
+Even as we believe our proposal has great potential upside, there are real risks involved in tinkering 
+so extensively with the current system of publication incentives,
+and without appropriate care one could create new inequities or exacerbate existing ones. 
+We later explore and address concerns about authorial control,
+hiring decisions made on the basis of bibliometrics, and preventing abuse.
+
+
+Our proposal is necessarily somewhat vague, both because it is complex
+and without all details yet fleshed out, and because it is impossible
+to know what the future holds and many aspects must necessarily be
+determined by a large network of participants as the process unfolds.
+Accordingly one might consider this document to be a sort of an exploration mixed with a rallying cry,
+to be followed in the future by more concrete prototype implementations, and by draft protocols.
+We intend for this document to itself serve as a prototype for a very preliminary instance of the proposed workflow,
+and have accordingly posted it at \url{https://github.com/anonymousauthors0/attention},
+which we encourage readers to fork, revise, and extend.
+
+\subsection{Accessibility Statement}
+
+% Each submission is required to contain an accessibility statement discussing how the proposed scheme improves accessibility, particularly to individuals with disabilities. This statement, expected to be about 1-2 paragraphs, must
+
+% Commit to improving accessibility,
+% Establish intended accessibility levels,
+% List the steps taken to improve accessibility concerns,
+% Discuss known exceptions to intended accessibility levels,
+% Comment on how feedback will be gathered and used for improving accessibility.
+% There are multiple great resources on writing accessibility statements on the Internet, like this one from Nomensa or this one from opentextbc. An example accessibility statement from Nature Journals can be found here.
+
+We are committed to improving the accessibility of the scientific literature. 
+At present, the accessibility of scientific content is controlled by its authors or publisher. 
+In our system, up to potential copyright roadblocks, it is possible for a community to coordinate improvements to the accessibility of scientific resources. At the very least, individuals could mark documents as not meeting certain accessibility standards, drawing attention to these issues, and potentially instigating changes.
+We believe that the attention mechanisms we are advocating for
+could foster improvements to accessibility by creating a record of these activities and
+allowing the community to measure its impact. 
+Once measured, this might even allow researchers to build careers in part by activities that make the literature more accessible.
+These activities include translating resources into other languages or 
+reorganizing, structuring, and labeling content so that is suitable for use by individuals with visual or auditory impairments, or those viewing from smaller screens or with lower bandwidth.
+
+
+We also welcome feedback on and improvements to the accessibility of this document itself, which is available at 
+\url{https://github.com/anonymousauthors0/attention}.
+
+
+
+%%%%%%%%%%%%%%%%%% %%%%%%%%%%%%%%%%%% %%%%%%%%%%%%%%%%%%
+\subsection{Future structure of this document}
+\label{structure}
+%%%%%%%%%%%%%%%%%% %%%%%%%%%%%%%%%%%% %%%%%%%%%%%%%%%%%%
+We will next 
+put forward
+a set of desiderata.
+Following this, we will lay out the basic concepts and the various layers of the proposed system itself,
+and we walk through various common workflows it enables.
+We then will explore 
+implications of the proposed system on 
+authorship, 
+reviewing, 
+disagreement, 
+and the size and nature of scientific contributions.
+We will describe the way our proposal would promote faster and higher-quality decentralized science, in the process potentially mitigating problems of today's overburdened traditional publication system and minimizing inequities (such as rich-get-richer and winner-take-all dynamics) that harm both science as an enterprise and individual scientists.
+We will then consider and address
+various potential risks and concerns.
+We will close with a discussion of possible next steps towards the development of prototype implementations and draft protocols.
+
+In
+the appendix, we will provide a set of ``frequently asked questions'' and responses, where 
+we illustrate how the proposed system is different in subtle but important ways from
+existing technologies
+such as GitHub, Wikipedia, hypothesis.is, and OpenReview.
+
+
+%%%%%%%%%%%%%%%%%% %%%%%%%%%%%%%%%%%% %%%%%%%%%%%%%%%%%%
+\end{document}
+%%%%%%%%%%%%%%%%%% %%%%%%%%%%%%%%%%%% %%%%%%%%%%%%%%%%%%
